@@ -1,0 +1,1 @@
+https://typescript-eslint.io/getting-started
