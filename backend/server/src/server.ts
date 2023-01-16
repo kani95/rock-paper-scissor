@@ -1,5 +1,9 @@
 import Koa from 'koa';
-const app = new Koa({ proxy: true });
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+import { config } from './config';
+
+const app = new Koa();
+
+app.listen(config.port, () => {
+    console.log(`Server running on port ${config.port}`);
 });
+

@@ -13,6 +13,7 @@
   "author": "Kasper Nilsson",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
     "eslint": "^8.32.0",
@@ -24,6 +25,7 @@
     "project": "./tsconfig.json"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "ts-node": "^10.9.1"
   }
 }
