@@ -4,8 +4,10 @@
   "description": "A simple server for the projects REST-API.",
   "main": "./server/src/server.ts",
   "scripts": {
-    "lint": "npx ts-standard && \"Successfully Linted!\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "npx eslint . && echo \"Successfully Linted!\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node-esm ./server/src/server.ts",
+    "dev-start": "nodemon ./server/src/server.ts"
   },
   "keywords": [],
   "author": "Kasper Nilsson",
@@ -14,9 +16,14 @@
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
     "eslint": "^8.32.0",
+    "koa": "^2.14.1",
+    "nodemon": "^2.0.20",
     "typescript": "^4.9.4"
   },
   "ts-standard": {
     "project": "./tsconfig.json"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.1"
   }
 }
