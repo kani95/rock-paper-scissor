@@ -1,8 +1,11 @@
 import { Context } from 'koa';
 import crypto from 'crypto';
 
+import { playerInterface, moveInterface } from './interfaces/interfaces';
+
 const createGame = async (ctx: Context) => {
-    const playerName = ctx.request.body;
+    const body = ctx.request.body as playerInterface;
+    const playerName = body.name.toLowerCase();
     const gameID = crypto.randomUUID();
 
     ctx.app.context.server.createGame(gameID, playerName);
@@ -11,7 +14,8 @@ const createGame = async (ctx: Context) => {
 }
 
 const joinGame = async (ctx: Context) => {
-    const playerName = ctx.request.body;
+    const body = ctx.request.body as playerInterface;
+    const playerName = body.name.toLowerCase();
     const gameID = ctx.params.id;
 
     ctx.app.context.server.joinGame(gameID, playerName);
@@ -20,12 +24,12 @@ const joinGame = async (ctx: Context) => {
 }
 
 const makeMove = async (ctx: Context) => {
-    const move = ctx.request.body;
-    // TODO get name and move from move
-
+    const body = ctx.request.body as moveInterface;
+    const move = body.move.toLowerCase();
+    const playerName = body.player.name.toLowerCase();
     const gameID = ctx.params.id;
 
-    ctx.app.context.server.makeMove(gameID, move);
+    ctx.app.context.server.makeMove(gameID, move, playerName);
     ctx.body = gameID;
 
     ctx.status = 200;

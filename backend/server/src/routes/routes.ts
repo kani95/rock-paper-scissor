@@ -1,5 +1,4 @@
 import Router from 'koa-router';
-import { Context, Next } from 'koa';
 import callbacks from './callbacks';
 import config from '../config';
 
@@ -10,6 +9,5 @@ router
     .post('/:id/join', callbacks.joinGame)
     .post('/:id/move', callbacks.makeMove)
     .get('/:id', callbacks.getGameState);
-
 
 export default router;

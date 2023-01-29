@@ -1,13 +1,13 @@
 // define the Player model
 
-enum Move {
-    ROCK = "ROCK",
-    PAPER = "PAPER",
-    SCISSORS = "SCISSORS",
-    INIT = "INIT"
+export enum Move {
+    ROCK = "rock",
+    PAPER = "paper",
+    SCISSORS = "scissors",
+    INIT = "init"
 }
 
-export default class Player {
+export class Player {
     name!: string;
     lastMove: string;
 
@@ -16,3 +16,5 @@ export default class Player {
         this.lastMove = Move.INIT;
     }
 }
+
+export default { Move, Player };
