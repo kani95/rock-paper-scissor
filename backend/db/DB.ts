@@ -6,6 +6,7 @@ import InvalidMoveException from "../exceptions/InvalidMoveException";
 import GameNotFoundException from "../exceptions/GameNotFoundException";
 import GameAlreadyExistsException from "../exceptions/GameAlreadyExistsException";
 import PlayerNotFoundException from "../exceptions/PlayerNotFoundException";
+import FullGameException from "../exceptions/FullGameException";
 
 class DB {
     private static instance: DB;
@@ -17,6 +18,11 @@ class DB {
         }
     
         return DB.instance;
+    }
+
+    // only for testing
+    public clearData(): void {
+        DB.data = {} as DBData;
     }
 
     public gameExists(gameId: string): void {
@@ -38,13 +44,25 @@ class DB {
     }
     
     public joinGame(gameId: string, playerName: string): void {
-        const player = new Player(playerName); 
+        this.gameExists(gameId);
         
-        DB.data[gameId].joinedPlayer = player;
-        DB.data[gameId].state.gameState = GameStatus.FULL;
+        if (this.isRoom(gameId)) {
+            const player = new Player(playerName); 
+            DB.data[gameId].joinedPlayer = player;
+            DB.data[gameId].state.gameState = GameStatus.FULL;
+        }
+        else {
+            throw new FullGameException("ERROR: Game with id: " + gameId + " is full. Can't join.");
+        }
+    }
+
+    public isRoom(gameId: string): boolean {
+        return DB.data[gameId].state.gameState === GameStatus.WAITING;
     }
 
     public makeMove(gameId: string, move: string, playerName: string): void {
+        this.gameExists(gameId);
+        
         if (this.validMove(move)) {
             this.canMakeMove(gameId, playerName).lastMove = move;
             this.setGameState(gameId);
@@ -59,7 +77,9 @@ class DB {
         return move === Move.ROCK || move === Move.PAPER || move === Move.SCISSORS;
     }
 
-    private canMakeMove(gameId: string, playerName: string): Player {        
+    private canMakeMove(gameId: string, playerName: string): Player {   
+        this.gameExists(gameId);
+        
         const game = DB.data[gameId];
         let player: Player | undefined;
 
@@ -108,6 +128,8 @@ class DB {
     }
 
     public getGameState(gameId: string): GameStatus {
+        this.gameExists(gameId);
+        
         return DB.data[gameId].state.gameState;
     }
 }

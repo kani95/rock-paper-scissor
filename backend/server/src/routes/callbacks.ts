@@ -2,10 +2,12 @@ import { Context } from 'koa';
 import crypto from 'crypto';
 
 import { playerInterface, moveInterface } from './interfaces/interfaces';
+
 import GameAlreadyExistsException from '../../../exceptions/GameAlreadyExistsException';
 import InvalidMoveException from '../../../exceptions/InvalidMoveException';
 import GameNotFoundException from '../../../exceptions/GameNotFoundException';
 import PlayerNotFoundException from '../../../exceptions/PlayerNotFoundException';
+import FullGameException from '../../../exceptions/FullGameException';
 
 const createGame = async (ctx: Context) => {
     const body = ctx.request.body as playerInterface;
@@ -21,14 +23,12 @@ const createGame = async (ctx: Context) => {
     catch (e)
     {
         if (e instanceof GameAlreadyExistsException) {
-            
             resStatus = 409;
             resBody = e.message;
         }
         else {
             resStatus = 400;
         }
-
     }
     finally {
         ctx.body = resBody;
@@ -49,7 +49,8 @@ const joinGame = async (ctx: Context) => {
     }
     catch (e)
     {
-        if (e instanceof GameAlreadyExistsException) {
+        if (e instanceof GameAlreadyExistsException ||
+            e instanceof FullGameException) {
             resStatus = 409;
             resBody = e.message;
         }

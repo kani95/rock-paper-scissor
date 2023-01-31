@@ -39,17 +39,14 @@ class Server {
     }
 
     public joinGame(gameId: string, playerName: string): void {
-        this.db.gameExists(gameId)
         this.db.joinGame(gameId, playerName);
     }
 
     public makeMove(gameId: string, move: string, playerName: string): void {
-        this.db.gameExists(gameId);    
         this.db.makeMove(gameId, move, playerName);
     }
 
     public getGame(gameId: string): string {
-        this.db.gameExists(gameId);
         return this.db.getGameState(gameId);
     }
 }
