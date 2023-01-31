@@ -35,34 +35,21 @@ class Server {
     }
 
     public createGame(gameId: string, playerName: string): void {
-        if (this.db.gameExists(gameId)) {
-            throw new Error("Game already exists");
-        }
-
         this.db.createGame(gameId, playerName);
     }
 
     public joinGame(gameId: string, playerName: string): void {
-        if (!this.db.gameExists(gameId)) {
-            throw new Error("Game does not exist");
-        }
-
+        this.db.gameExists(gameId)
         this.db.joinGame(gameId, playerName);
     }
 
     public makeMove(gameId: string, move: string, playerName: string): void {
-        if (!this.db.gameExists(gameId)) {
-            throw new Error("Game does not exist");
-        }
-        
+        this.db.gameExists(gameId);    
         this.db.makeMove(gameId, move, playerName);
     }
 
     public getGame(gameId: string): string {
-        if (!this.db.gameExists(gameId)) {
-            throw new Error("Game does not exist");
-        }
-        
+        this.db.gameExists(gameId);
         return this.db.getGameState(gameId);
     }
 }

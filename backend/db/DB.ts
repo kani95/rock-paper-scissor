@@ -2,6 +2,10 @@ import DBData from "./types/DBData";
 import Game from "./model/Game";
 import { Move, Player } from "./model/Player";
 import { State, GameStatus } from "./model/State";
+import InvalidMoveException from "../exceptions/InvalidMoveException";
+import GameNotFoundException from "../exceptions/GameNotFoundException";
+import GameAlreadyExistsException from "../exceptions/GameAlreadyExistsException";
+import PlayerNotFoundException from "../exceptions/PlayerNotFoundException";
 
 class DB {
     private static instance: DB;
@@ -15,14 +19,20 @@ class DB {
         return DB.instance;
     }
 
-    public gameExists(gameId: string): boolean {
-        return DB.data[gameId] !== undefined;
+    public gameExists(gameId: string): void {
+        if (!DB.data[gameId]) {
+            throw new GameNotFoundException("ERROR: Game with id: " + gameId + " not found");
+        }
     }
 
     public createGame(gameId: string, playerName: string): void {
         const state = new State(GameStatus.WAITING);
         const player = new Player(playerName);
         const game = new Game(player, state);
+
+        if (DB.data[gameId]) {
+            throw new GameAlreadyExistsException("ERROR: Game with id: " + gameId + " already exists");
+        }
 
         DB.data[gameId] = game;        
     }
@@ -41,7 +51,7 @@ class DB {
             console.log(DB.data[gameId]);
         }
         else {
-            throw new Error("Invalid move");
+            throw new InvalidMoveException("ERROR: In game: " + gameId + " invalid move: " + move + " for player: " + playerName);
         }
     }
 
@@ -65,11 +75,11 @@ class DB {
                 return player;
             }
             else {
-                throw new Error("Player already made a move");
+                throw new InvalidMoveException("ERROR: in game: " + gameId + " player: " + playerName + " already made a move");
             }
         }
         else {
-            throw new Error("Player not found");
+            throw new PlayerNotFoundException("ERROR: in game: " + gameId + " player: " + playerName + " not found");
         }
     }
 

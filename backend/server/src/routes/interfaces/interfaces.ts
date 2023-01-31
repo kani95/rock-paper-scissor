@@ -1,5 +1,5 @@
 export interface moveInterface {
-    player: playerInterface,
+    name: string,
     move: string;
 }
 

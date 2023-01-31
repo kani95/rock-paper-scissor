@@ -1,9 +1,9 @@
 import BaseException from "./BaseException";
 
-class GameNotFoundException extends BaseException {
+class PlayerNotFoundException extends BaseException {
     constructor(message: string) {
         super(message);
     }
 }
 
-export default GameNotFoundException;
+export default PlayerNotFoundException;
