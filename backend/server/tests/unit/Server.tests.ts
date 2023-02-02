@@ -1,18 +1,17 @@
-import RequestHandler from "../../src/Server";
+import Server from "../../src/Server";
 import { Move } from "../../../db/model/Player";
 
 describe("Server-class tests", () => {
     
-    jest.mock("../../src/Server");
-    let server: RequestHandler;
+    let server: Server;
 
     beforeEach(() => {
-        server = new RequestHandler();
+        server = new Server();
         server.clearData();
     });
 
     it("should create a Server instance", () => {
-        expect(server).toBeInstanceOf(RequestHandler);
+        expect(server).toBeInstanceOf(Server);
     });
 
     it("should be able to start the server", async () => {

@@ -19,6 +19,24 @@ describe('Server tests', () => {
         expect(response.body).toBeDefined();
     });
 
+    it('Fail to create game', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix)
+                .send(JSON.parse(JSON.stringify({name: ""})));
+        expect(response.status).toBe(400);
+        expect(response.body).toBeDefined();
+    });
+
+    it('Fail to create game', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix)
+                .send(JSON.parse(JSON.stringify({error: "player1"})));
+        expect(response.status).toBe(400);
+        expect(response.body).toBeDefined();
+    });
+
     it('should be able to join a game', async () => {
         const responseCreateGame = 
             await request(app)
@@ -33,6 +51,33 @@ describe('Server tests', () => {
                 .post(config.prefix + "/join/" + id)
                 .send(JSON.parse(JSON.stringify({name: "player2"})));
         expect(response.status).toBe(200);
+        expect(response.body).toBeDefined();
+    });
+
+    it('Fail to join game', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix + "/join/" + "1")
+                .send(JSON.parse(JSON.stringify({name: ""})));
+        expect(response.status).toBe(400);
+        expect(response.body).toBeDefined();
+    });
+
+    it('Fail to join game', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix + "/join/" + "1")
+                .send(JSON.parse(JSON.stringify({error: "player2"})));
+        expect(response.status).toBe(400);
+        expect(response.body).toBeDefined();
+    });
+
+    it('Fail to join game', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix + "/join/" + "")
+                .send(JSON.parse(JSON.stringify({name: "player2"})));
+        expect(response.status).toBe(405);
         expect(response.body).toBeDefined();
     });
 
@@ -61,6 +106,24 @@ describe('Server tests', () => {
         expect(response.body).toBeDefined();
     });
 
+    it('Fail to make a move', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix + "/move/" + "1")
+                .send(JSON.parse(JSON.stringify({name: "player1", move: "fire"})));
+        expect(response.status).toBe(400);
+        expect(response.body).toBeDefined();
+    });
+
+    it('Fail to make a move', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix + "/move/" + "1")
+                .send(JSON.parse(JSON.stringify({name: "player1", move: "error"})));
+        expect(response.status).toBe(400);
+        expect(response.body).toBeDefined();
+    });
+
     it('should be able to get a game', async () => {
         const responseCreateGame =
             await request(app)
@@ -83,6 +146,14 @@ describe('Server tests', () => {
                 .get(config.prefix + "/" + id);
         expect(responeGetGame.status).toBe(200);
         expect(responeGetGame.body).toBeDefined();
+    });
+
+    it('Fail to get a game', async () => {
+        const response =
+            await request(app)
+                .get(config.prefix + "/1231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313123131231312313");
+        expect(response.status).toBe(400);
+        expect(response.body).toBeDefined();
     });
 
     it('fail to join game', async () => {
@@ -114,13 +185,27 @@ describe('Server tests', () => {
         expect(response.body).toBeDefined();
     });
 
+    it('405', async () => {
+        const response =
+            await request(app)
+                .delete(config.prefix);
+        expect(response.status).toBe(405);
+        expect(response.body).toBeDefined();
+    });
 
-    // it("Fail to create a game", async () => {
-    //     const response =
-    //         await request(app)
-    //             .post(config.prefix)
-    //             .send("error=player1");
-    //     expect(response.status).toBe(400);
-    //     expect(response.body).toBeDefined();
-    // });
+    it('405', async () => {
+        const response =
+            await request(app)
+                .put(config.prefix);
+        expect(response.status).toBe(405);
+        expect(response.body).toBeDefined();
+    });
+
+    it('404', async () => {
+        const response =
+            await request(app)
+                .post(config.prefix + "/joins/" + "1");
+        expect(response.status).toBe(404);
+        expect(response.body).toBeDefined();
+    });
 });
