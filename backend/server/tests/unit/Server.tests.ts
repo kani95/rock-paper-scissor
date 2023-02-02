@@ -1,8 +1,7 @@
 import Server from "../../src/Server";
-import { Move } from "../../../db/model/Player";
+import Move from "../../../db/model/Move";
 
 describe("Server-class tests", () => {
-    
     let server: Server;
 
     beforeEach(() => {

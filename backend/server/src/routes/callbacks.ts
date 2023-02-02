@@ -1,6 +1,5 @@
 import { Context } from 'koa';
 import crypto from 'crypto';
-import { playerSchema, moveSchema, idSchema } from './schema/zodSchema';
 
 import GameAlreadyExistsException from '../../../exceptions/GameAlreadyExistsException';
 import InvalidMoveException from '../../../exceptions/InvalidMoveException';
@@ -8,9 +7,13 @@ import GameNotFoundException from '../../../exceptions/GameNotFoundException';
 import PlayerNotFoundException from '../../../exceptions/PlayerNotFoundException';
 import FullGameException from '../../../exceptions/FullGameException';
 
+import { playerSchema, moveSchema, idSchema } from './schema/zodSchema';
+
+// post / route
 const createGame = async (ctx: Context) => {
     let body;
 
+    // validate the body
     try {
         body = playerSchema.parse(ctx.request.body);
     }
@@ -28,7 +31,9 @@ const createGame = async (ctx: Context) => {
 
     try {
         ctx.app.context.server.createGame(gameID, playerName);
-        resBody = {"message": "Created game successfully", "id": gameID};
+        const msg = ctx.app.context.server.getGame(gameID).message();
+        const state = {"id": gameID, "msg": msg};        
+        resBody = state; 
     }
     catch (e)
     {
@@ -48,10 +53,12 @@ const createGame = async (ctx: Context) => {
     }
 }
 
+// post /join/:id route
 const joinGame = async (ctx: Context) => {
     let body;
     let gameID;
 
+    // validate the body and id params
     try {
         body = playerSchema.parse(ctx.request.body);
         gameID = idSchema.parse(ctx.params).id;
@@ -69,7 +76,9 @@ const joinGame = async (ctx: Context) => {
 
     try {
         ctx.app.context.server.joinGame(gameID, playerName);
-        resBody = {"message": "Joined game successfully", "id": gameID};
+        const msg = ctx.app.context.server.getGame(gameID).message();
+        const state = {"id": gameID, "msg": msg}; 
+        resBody = state;
     }
     catch (e)
     {
@@ -91,11 +100,13 @@ const joinGame = async (ctx: Context) => {
     }
 }
 
+// post /move/:id route
 const makeMove = async (ctx: Context) => {
 
     let body;
     let gameID;
 
+    // validate the body and id params
     try {
         body = moveSchema.parse(ctx.request.body);
         gameID = idSchema.parse(ctx.params).id;
@@ -114,7 +125,9 @@ const makeMove = async (ctx: Context) => {
 
     try {
         ctx.app.context.server.makeMove(gameID, move, playerName);
-        resBody = {"player": playerName, "move": move, "message": "Move made successfully"};
+        const msg = ctx.app.context.server.getGame(gameID).message();
+        const state = {"id": gameID, "move": move, "msg": msg}; 
+        resBody = state;
     }
     catch (e)
     {
@@ -137,15 +150,17 @@ const makeMove = async (ctx: Context) => {
     }
 }
 
+// get /state/:id route
 const getGameState = async (ctx: Context) => {
 
     let gameID;
 
+    // validate the id params
     try {
         gameID = idSchema.parse(ctx.params).id;
     }
     catch (e) {
-        ctx.body = JSON.parse(JSON.stringify({"Error": "Invalid body"}));
+        ctx.body = JSON.parse(JSON.stringify({"Error": "Invalid id"}));
         ctx.status = 400;
         return;
     }
@@ -155,7 +170,9 @@ const getGameState = async (ctx: Context) => {
 
     try {  
         const state = ctx.app.context.server.getGame(gameID);
-        resBody = {"state": state};
+        state.id = gameID;
+        state.msg = state.message();
+        resBody = state;
     }
     catch (e)
     {

@@ -1,13 +1,18 @@
-import { Player } from "./Player"
-import { State } from "./State"
+import { State } from "./State";
 
+// represent the game with the current game state
 export default class Game {
-    initPlayer!: Player;
-    joinedPlayer!: Player;
-    state!: State;
+    private state!: State;
 
-    constructor(initPlayer: Player, state: State) {
-        this.initPlayer = initPlayer;
+    public getState(): State {
+        return this.state;
+    }
+
+    public setState(state: State): void {
+        this.state = state;
+    }
+
+    constructor(state: State) {
         this.state = state;
     }
 }

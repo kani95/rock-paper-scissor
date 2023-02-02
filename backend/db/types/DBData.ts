@@ -1,6 +1,7 @@
 import Game from '../model/Game';
 
-interface DBData {
+// the database data type
+type DBData = {
     [key: string]: Game;
 }
 

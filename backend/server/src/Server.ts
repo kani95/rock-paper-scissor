@@ -5,7 +5,9 @@ import BodyParser from 'koa-bodyparser';
 import config  from './config';
 import router from './routes/routes';
 import DB from '../../db/DB';
+import { State } from '../../db/model/State';
 
+// handles the koa-server instance and stores the database instance
 class Server {
     public app: Koa;
     private db: DB;
@@ -58,10 +60,11 @@ class Server {
         this.db.makeMove(gameId, move, playerName);
     }
 
-    public getGame(gameId: string): string {
+    public getGame(gameId: string): State {
         return this.db.getGameState(gameId);
     }
 
+    // for testing purposes
     public clearData(): void {
         this.db.clearData();
     }

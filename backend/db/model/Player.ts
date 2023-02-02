@@ -1,15 +1,21 @@
-// define the Player model
+import Move from './Move';
 
-export enum Move {
-    ROCK = "rock",
-    PAPER = "paper",
-    SCISSORS = "scissors",
-    INIT = "init"
-}
-
+// represents a player in the game
 export class Player {
-    name!: string;
-    lastMove: string;
+    private name!: string;
+    private lastMove: string;
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public getLastMove(): string {
+        return this.lastMove;
+    }
+
+    public setLastMove(move: string): void {
+        this.lastMove = move;
+    }
 
     constructor(name: string) {
         this.name = name;
@@ -17,4 +23,4 @@ export class Player {
     }
 }
 
-export default { Move, Player };
+export default Player;

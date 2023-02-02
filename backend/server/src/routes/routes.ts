@@ -4,6 +4,7 @@ import config from '../config';
 
 const router = new Router({prefix: config.prefix});
 
+// apply routes
 router
     .post('/', callbacks.createGame)
     .post('/join/:id', callbacks.joinGame)

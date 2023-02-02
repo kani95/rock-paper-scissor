@@ -1,7 +1,6 @@
 import config from "../../src/config";
 
 describe("Config tests", () => {
-
     it("should be able to load config", () => {
         expect(config).not.toBeUndefined();
     });
