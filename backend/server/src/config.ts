@@ -1,12 +1,10 @@
 import dotenv from 'dotenv';
 
-const result = dotenv.config();
-if (result.error) {
-    console.log("Error loading .env file\nUsing default configuration");
-}
+dotenv.config();    
 
+/* istanbul ignore next */
 const config = {
-    port: process.env.PORT || 8000,
+    port: process.env.PORT  || 8000,
     endpoint: process.env.ENDPOINT || 'http://localhost:8000/api/games',
     prefix : process.env.PREFIX || '/api/games',
 }

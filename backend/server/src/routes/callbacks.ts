@@ -22,6 +22,7 @@ const createGame = async (ctx: Context) => {
     }
     catch (e)
     {
+        /* istanbul ignore next */
         if (e instanceof GameAlreadyExistsException) {
             resStatus = 409;
             resBody = e.message;
@@ -31,7 +32,7 @@ const createGame = async (ctx: Context) => {
         }
     }
     finally {
-        ctx.body = resBody;
+        ctx.body = JSON.parse(JSON.stringify({"id": resBody}));
         ctx.status = resStatus;
     }
 }
@@ -49,7 +50,9 @@ const joinGame = async (ctx: Context) => {
     }
     catch (e)
     {
+        /* istanbul ignore next */
         if (e instanceof GameAlreadyExistsException ||
+            e instanceof GameNotFoundException      ||
             e instanceof FullGameException) {
             resStatus = 409;
             resBody = e.message;
@@ -59,7 +62,7 @@ const joinGame = async (ctx: Context) => {
         }
     }
     finally {
-        ctx.body = resBody;
+        ctx.body = JSON.parse(JSON.stringify({"id": resBody}));
         ctx.status = resStatus;
     }
 }
@@ -78,6 +81,7 @@ const makeMove = async (ctx: Context) => {
     }
     catch (e)
     {
+        /* istanbul ignore next */
         if (e instanceof GameAlreadyExistsException ||
             e instanceof GameNotFoundException      ||
             e instanceof PlayerNotFoundException    ||
@@ -90,7 +94,7 @@ const makeMove = async (ctx: Context) => {
         }
     }
     finally {
-        ctx.body = resBody;
+        ctx.body = JSON.parse(JSON.stringify({"id": resBody}));
         ctx.status = resStatus;
     }
 }
@@ -106,16 +110,18 @@ const getGameState = async (ctx: Context) => {
     }
     catch (e)
     {
-        if (e instanceof GameAlreadyExistsException) {
+        /* istanbul ignore next */
+        if (e instanceof GameAlreadyExistsException ||
+            e instanceof GameNotFoundException) {
             resStatus = 409;
-            resBody = e.message;
+            resBody =  e.message;
         }
         else {
             resStatus = 400;
         }
     }
     finally {
-        ctx.body = resBody;
+        ctx.body = JSON.parse(JSON.stringify({"state": resBody}));
         ctx.status = resStatus;
     }
 }

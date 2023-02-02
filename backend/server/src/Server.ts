@@ -1,4 +1,5 @@
-import Koa from 'koa';
+import Koa, { Context, Next } from 'koa';
+import http from 'http';
 import BodyParser from 'koa-bodyparser';
 
 import config  from './config';
@@ -6,7 +7,7 @@ import router from './routes/routes';
 import DB from '../../db/DB';
 
 class Server {
-    private app: Koa;
+    public app: Koa;
     private db: DB;
 
     constructor() {
@@ -14,24 +15,35 @@ class Server {
         this.db = DB.getInstance();
     }
 
-    public start(): void {
+    /* istanbul ignore next */
+    public start(): http.Server {
         this.app.use(BodyParser());
         this.setupCors();
         this.app.use(router.routes());
         this.app.use(router.allowedMethods());
         this.app.context.server = this;
 
-        this.app.listen(config.port, () => {
-            console.log(`Server running on: ${config.endpoint} 🚀`);
-        });
+        return this.app.listen(config.port, this.listenCallback);   
     }
 
+    /* istanbul ignore next */
+    private listenCallback(): void {
+        console.log(`Server running on: ${config.endpoint} 🚀`);
+    }
+
+    /* istanbul ignore next */
     private setupCors(): void {
-        this.app.use(async (ctx, next) => {
-            ctx.set('Access-Control-Allow-Origin', '*');
-            ctx.set('Access-Control-Allow-Methods', 'GET, POST');
-            await next();
-        }); 
+        this.app.use(this.corsSettings); 
+    }
+
+    /* istanbul ignore next */
+    private async corsSettings(ctx: Context, next: Next): Promise<void> {
+        ctx.set('Access-Control-Allow-Origin', '*');
+        ctx.set('Access-Control-Allow-Methods', 'GET, POST');
+        ctx.set('Access-Control-Allow-Headers', 'Content-Type');
+        ctx.set('Content-Type', 'application/json');
+        ctx.set('Allow', 'GET, POST');
+        await next();
     }
 
     public createGame(gameId: string, playerName: string): void {
@@ -48,6 +60,10 @@ class Server {
 
     public getGame(gameId: string): string {
         return this.db.getGameState(gameId);
+    }
+
+    public clearData(): void {
+        this.db.clearData();
     }
 }
 
