@@ -1,6 +1,16 @@
 # Rock-Paper-Scissors Backend
 ## Description
 This is a simple Rock-Paper-Scissors game backend. It is written in TypeScript and uses Koa as a web-framework.
+
+## Assumptions
+* The game is played between two players.
+* A player can only make one move per game.
+* The game is over when both players have made a move.
+* The game is over when a player has won or there is a draw.
+* The player who creates the game can still make a move even though the second player has not joined the game.
+* The available moves are: rock, paper and scissors.
+* Both the player names and the available moves are case insensitive.
+
 ## Installation
 1. make sure you have Node.js and npm installed
 2. stand in the root directory of the project

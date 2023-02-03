@@ -9,7 +9,7 @@ import FullGameException from '../../../exceptions/FullGameException';
 
 import { playerSchema, moveSchema, idSchema } from './schema/zodSchema';
 
-// post / route
+// POST /
 const createGame = async (ctx: Context) => {
     let body;
 
@@ -53,7 +53,7 @@ const createGame = async (ctx: Context) => {
     }
 }
 
-// post /join/:id route
+// POST /join/:id
 const joinGame = async (ctx: Context) => {
     let body;
     let gameID;
@@ -100,9 +100,8 @@ const joinGame = async (ctx: Context) => {
     }
 }
 
-// post /move/:id route
+// POST /move/:id
 const makeMove = async (ctx: Context) => {
-
     let body;
     let gameID;
 
@@ -125,8 +124,7 @@ const makeMove = async (ctx: Context) => {
 
     try {
         ctx.app.context.server.makeMove(gameID, move, playerName);
-        const msg = ctx.app.context.server.getGame(gameID).message();
-        const state = {"id": gameID, "move": move, "msg": msg}; 
+        const state = {"id": gameID, "move": move, "name": playerName, "msg": "Move made successfully."}; 
         resBody = state;
     }
     catch (e)
@@ -150,9 +148,8 @@ const makeMove = async (ctx: Context) => {
     }
 }
 
-// get /state/:id route
+// GET /state/:id
 const getGameState = async (ctx: Context) => {
-
     let gameID;
 
     // validate the id params

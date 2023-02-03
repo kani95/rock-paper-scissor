@@ -2,7 +2,8 @@ import DBData from "./types/DBData";
 import Game from "./model/Game";
 import Player from "./model/Player";
 import Move from "./model/Move";
-import { State, GameStatus, WaitingState, FullState, DrawState, InitPlayerWinState, JoinedPlayerWinState, HideState } from "./model/State";
+import { State, GameStatus, WaitingState, FullState, DrawState, InitPlayerWinState,
+         JoinedPlayerWinState, HideState } from "./model/State";
 
 import InvalidMoveException from "../exceptions/InvalidMoveException";
 import GameNotFoundException from "../exceptions/GameNotFoundException";
@@ -94,20 +95,23 @@ class DB {
     // if the player already made a move, throw an exception
     private canMakeMove(gameId: string, playerName: string): Player {   
         const gameState = DB.data[gameId].getState();
-        let player: Player | undefined;
+        const initPlayer = gameState.getInitPlayer();
+        const joinedPlayer = gameState.getJoinedPlayer();
+        
+        let resPlayer: Player | undefined;
 
         // find the player that made the move
-        if (gameState.getJoinedPlayer().getName() === playerName) {
-            player = gameState.getJoinedPlayer();
+        if (joinedPlayer !== undefined && joinedPlayer.getName() === playerName) {
+            resPlayer = joinedPlayer;
         }
-        else if (gameState.getInitPlayer().getName() === playerName) {
-            player = gameState.getInitPlayer();
+        else if (initPlayer !== undefined && initPlayer.getName() === playerName) {
+            resPlayer = initPlayer;
         }
 
         // if the player is found, check if the player already made a move
-        if (player !== undefined) {
-            if (player.getLastMove() === Move.INIT) {
-                return player;
+        if (resPlayer !== undefined) {
+            if (resPlayer.getLastMove() === Move.INIT) {
+                return resPlayer;
             }
             else {
                 throw new InvalidMoveException("ERROR: in game: " + gameId + 
@@ -125,30 +129,30 @@ class DB {
         const gameState = DB.data[gameId].getState();
         const initPlayer = gameState.getInitPlayer();
         const joinedPlayer = gameState.getJoinedPlayer();
-        
+
+        // only one player in the game so far, no need to set the game state
+        if (initPlayer === undefined || joinedPlayer === undefined) {
+            return;
+        }
+
         let state : State;
 
         // if both players made a move, set the game state
         if (initPlayer.getLastMove() !== Move.INIT && joinedPlayer.getLastMove() !== Move.INIT) {
             if (initPlayer.getLastMove() === joinedPlayer.getLastMove()) {
                 state = new DrawState();
-                state.setGameState(GameStatus.DRAW);
             }
             else if (initPlayer.getLastMove() === Move.ROCK && joinedPlayer.getLastMove() === Move.SCISSORS) {
                 state = new InitPlayerWinState();
-                state.setGameState(GameStatus.INITPLAYERWIN);
             }
             else if (initPlayer.getLastMove() === Move.PAPER && joinedPlayer.getLastMove() === Move.ROCK) {
                 state = new InitPlayerWinState();
-                state.setGameState(GameStatus.INITPLAYERWIN);
             }
             else if (initPlayer.getLastMove() === Move.SCISSORS && joinedPlayer.getLastMove() === Move.PAPER) {
                 state = new InitPlayerWinState();
-                state.setGameState(GameStatus.INITPLAYERWIN);
             }
             else {
                 state = new JoinedPlayerWinState();
-                state.setGameState(GameStatus.JOINEDPLAYERWIN);
             }
 
             state.setInitPlayer(initPlayer);

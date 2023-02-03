@@ -6,6 +6,7 @@ import Player from "./Player";
     * INITPLAYERWIN: the player who created the game won
     * JOINEDPLAYERWIN: the player who joined the game won
     * DRAW: the game ended in a draw
+    * HIDE: one player has not made a move yet
 */
 export enum GameStatus {
     WAITING = "WAITING",
@@ -51,10 +52,6 @@ export abstract class State implements IState {
         return this.gameState;
     }
 
-    public setGameState(gameState: GameStatus): void {
-        this.gameState = gameState;
-    }
-
     public abstract message(): string;
 }
 
@@ -87,7 +84,7 @@ export class InitPlayerWinState extends State {
     }
 
     public message(): string {
-        return this.getInitPlayer.name + " won the game!";
+        return this.getInitPlayer().getName() + " won the game!";
     }
 }
 

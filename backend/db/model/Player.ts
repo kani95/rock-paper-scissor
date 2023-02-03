@@ -5,6 +5,11 @@ export class Player {
     private name!: string;
     private lastMove: string;
 
+    constructor(name: string) {
+        this.name = name;
+        this.lastMove = Move.INIT;
+    }
+
     public getName(): string {
         return this.name;
     }
@@ -15,11 +20,6 @@ export class Player {
 
     public setLastMove(move: string): void {
         this.lastMove = move;
-    }
-
-    constructor(name: string) {
-        this.name = name;
-        this.lastMove = Move.INIT;
     }
 }
 

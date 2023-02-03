@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import callbacks from './callbacks';
 import config from '../config';
 
-const router = new Router({prefix: config.prefix});
+const router = new Router({ prefix: config.prefix });
 
 // apply routes
 router

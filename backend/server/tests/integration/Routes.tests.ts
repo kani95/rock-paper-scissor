@@ -238,6 +238,175 @@ describe('Server-class tests', () => {
             expect(responeGetGame.body).toBeDefined();
         });
 
+        it('should be able to get game, player1 win', async () => {
+            const responseCreateGame = 
+                await request(app)
+                    .post(config.prefix)
+                    .send(JSON.parse(JSON.stringify({name: "player1"})));
+            expect(responseCreateGame.status).toBe(200);
+            expect(responseCreateGame.body).toBeDefined();
+            
+            const id = responseCreateGame.body.id;
+            
+            const responseJoinGame = 
+                await request(app)
+                    .post(config.prefix + "/join/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2"})));
+            expect(responseJoinGame.status).toBe(200);
+            expect(responseJoinGame.body).toBeDefined();
+            
+            const response = 
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player1", move: "scissors"})));
+            expect(response.status).toBe(200);
+            expect(response.body).toBeDefined();
+
+            const response2 =
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2", move: "paper"})));
+            expect(response2.status).toBe(200);
+            expect(response2.body).toBeDefined();
+            
+            const responeGetGame =
+                await request(app)
+                    .get(config.prefix + "/" + id);
+            expect(responeGetGame.status).toBe(200);
+            expect(responeGetGame.body).toBeDefined();
+        });
+
+        it('should be able to get game, draw', async () => {
+            const responseCreateGame = 
+                await request(app)
+                    .post(config.prefix)
+                    .send(JSON.parse(JSON.stringify({name: "player1"})));
+            expect(responseCreateGame.status).toBe(200);
+            expect(responseCreateGame.body).toBeDefined();
+            
+            const id = responseCreateGame.body.id;
+            
+            const responseJoinGame = 
+                await request(app)
+                    .post(config.prefix + "/join/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2"})));
+            expect(responseJoinGame.status).toBe(200);
+            expect(responseJoinGame.body).toBeDefined();
+            
+            const response = 
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player1", move: "rock"})));
+            expect(response.status).toBe(200);
+            expect(response.body).toBeDefined();
+
+            const response2 =
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2", move: "rock"})));
+            expect(response2.status).toBe(200);
+            expect(response2.body).toBeDefined();
+
+            const responeGetGame =
+                await request(app)
+                    .get(config.prefix + "/" + id);
+            expect(responeGetGame.status).toBe(200);
+            expect(responeGetGame.body).toBeDefined();
+        });
+
+        it('should be able to get game, player2 win', async () => {
+            const responseCreateGame = 
+                await request(app)
+                    .post(config.prefix)
+                    .send(JSON.parse(JSON.stringify({name: "player1"})));
+            expect(responseCreateGame.status).toBe(200);
+            expect(responseCreateGame.body).toBeDefined();
+            
+            const id = responseCreateGame.body.id;
+            
+            const responseJoinGame = 
+                await request(app)
+                    .post(config.prefix + "/join/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2"})));
+            expect(responseJoinGame.status).toBe(200);
+            expect(responseJoinGame.body).toBeDefined();
+            
+            const response = 
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player1", move: "rock"})));
+            expect(response.status).toBe(200);
+            expect(response.body).toBeDefined();
+
+            const response2 =
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2", move: "paper"})));
+            expect(response2.status).toBe(200);
+            expect(response2.body).toBeDefined();
+
+            const responeGetGame =
+                await request(app)
+                    .get(config.prefix + "/" + id);
+            expect(responeGetGame.status).toBe(200);
+            expect(responeGetGame.body).toBeDefined();
+        });
+
+        it('should not be able to get state, hide state, one player not made move', async () => {
+            const responseCreateGame = 
+                await request(app)
+                    .post(config.prefix)
+                    .send(JSON.parse(JSON.stringify({name: "player1"})));
+            expect(responseCreateGame.status).toBe(200);
+            expect(responseCreateGame.body).toBeDefined();
+            
+            const id = responseCreateGame.body.id;
+            
+            const responseJoinGame = 
+                await request(app)
+                    .post(config.prefix + "/join/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2"})));
+            expect(responseJoinGame.status).toBe(200);
+            expect(responseJoinGame.body).toBeDefined();
+            
+            const response2 =
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player2", move: "paper"})));
+            expect(response2.status).toBe(200);
+            expect(response2.body).toBeDefined();
+
+            const responeGetGame =
+                await request(app)
+                    .get(config.prefix + "/" + id);
+            expect(responeGetGame.status).toBe(200);
+            expect(responeGetGame.body).toBeDefined();
+        });
+
+        it('should be able to make move even though only one player is in game', async () => {
+            const responseCreateGame = 
+                await request(app)
+                    .post(config.prefix)
+                    .send(JSON.parse(JSON.stringify({name: "player1"})));
+            expect(responseCreateGame.status).toBe(200);
+            expect(responseCreateGame.body).toBeDefined();
+            
+            const id = responseCreateGame.body.id;
+            
+            const response2 =
+                await request(app)
+                    .post(config.prefix + "/move/" + id)
+                    .send(JSON.parse(JSON.stringify({name: "player1", move: "paper"})));
+            expect(response2.status).toBe(200);
+            expect(response2.body).toBeDefined();
+
+            const responeGetGame =
+                await request(app)
+                    .get(config.prefix + "/" + id);
+            expect(responeGetGame.status).toBe(200);
+            expect(responeGetGame.body).toBeDefined();
+        });
+
         it('Fail to get a game, over limit in length id', async () => {
             const response =
                 await request(app)

@@ -20,7 +20,7 @@ describe("DB-class tests", () => {
             expect(db.getGameState("1").getGameState()).toBe(GameStatus.WAITING);
         });
 
-        it("should create a second game", () => {
+        it("should create two games", () => {
             db.createGame("1", "player1");
             db.createGame("2", "player1");
             expect(db.getGameState("1").getGameState()).toBe(GameStatus.WAITING);
@@ -52,10 +52,17 @@ describe("DB-class tests", () => {
     });
 
     describe("makeMove", () => {
-        it("should make a move", () => {
+        it("should make a move, player1, hide state", () => {
             db.createGame("1", "player1");
             db.joinGame("1", "player2");
             db.makeMove("1", Move.ROCK, "player1");
+            expect(db.getGameState("1").getGameState()).toBe(GameStatus.HIDE);
+        })
+
+        it("should make a move, player2, hide state", () => {
+            db.createGame("1", "player1");
+            db.joinGame("1", "player2");
+            db.makeMove("1", Move.ROCK, "player2");
             expect(db.getGameState("1").getGameState()).toBe(GameStatus.HIDE);
         })
 

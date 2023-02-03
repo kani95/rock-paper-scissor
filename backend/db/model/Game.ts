@@ -4,15 +4,15 @@ import { State } from "./State";
 export default class Game {
     private state!: State;
 
+    constructor(state: State) {
+        this.state = state;
+    }
+
     public getState(): State {
         return this.state;
     }
 
     public setState(state: State): void {
-        this.state = state;
-    }
-
-    constructor(state: State) {
         this.state = state;
     }
 }

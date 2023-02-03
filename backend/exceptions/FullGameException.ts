@@ -1,7 +1,9 @@
 import BaseException from "./BaseException";
 
-export default class FullGameException extends BaseException {
+class FullGameException extends BaseException {
     constructor(message: string) {
         super(message);
     }
 }
+
+export default FullGameException;

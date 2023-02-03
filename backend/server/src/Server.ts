@@ -9,7 +9,7 @@ import { State } from '../../db/model/State';
 
 // handles the koa-server instance and stores the database instance
 class Server {
-    public app: Koa;
+    private app: Koa;
     private db: DB;
 
     constructor() {
