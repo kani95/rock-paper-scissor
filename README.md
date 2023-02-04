@@ -20,7 +20,7 @@ This is a simple Rock-Paper-Scissors game backend. It is written in TypeScript a
 ## Configuration
 The configuration is done with [dotenv](https://www.npmjs.com/package/dotenv).
 The config-class in `/server/src/config.ts` loads the .env file and makes the values available in the application or uses default values for `PORT=8000` and `PREFIX=/api/games`.
-View the `.env-example` file for an example of the .env file that should be created in the root directory of the project. Note that this is not obligatory, the application will work without it.
+View the `.env-example` file for an example of the .env file that should be created in the path `/backend/` of the project. Note that this is not obligatory, the application will work without it.
 ## Testing
 The testing is done with [Jest](https://jestjs.io/).
 To test the project run `npm run test`
